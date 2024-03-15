@@ -13,7 +13,9 @@
             <div class="p-4 bg-white shadow rounded-xl text-center">
                 <h2 class="mb-5 text-2xl font-semibold">{{ user.username }}</h2>
 
-                <a href="#" class="px-5 py-3 block rounded-xl text-white bg-blue-600 hover:bg-teal-700">Join</a>
+                <a href="{% url 'chatroom' user.username%}" class="px-5 py-3 block rounded-xl text-white bg-blue-600 hover:bg-teal-700">Join</a>
+                {% comment %} <a href="{% url 'room' room.slug %}" class {% endcomment %}
+                {% comment %} <a href="{% url 'privatewindow' {{ user.username }} %}" {% endcomment %}
             </div>
         </div>
     {% endfor %}

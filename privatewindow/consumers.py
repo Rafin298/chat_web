@@ -4,18 +4,18 @@ from django.contrib.auth.models import User
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 
-from .models import Room, Message
+from .models import Mychats
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f"chat_{self.room_name}"
-
+        # self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.room_group_name = f"chat_1"
+        print(self.room_group_name)
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-        print("yooooooo.......")
+        print("connecting........")
         await self.accept()
 
     async def disconnect(self, code):
@@ -28,36 +28,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         print(data)
-        message = data['message']
+        message = data['msg']
         username = data['username']
-        room = data['room']
+        frndname = data['frndname']
+        # room = data['room']
 
-        await self.save_message(username, room, message)
+        await self.save_message(username, frndname, message)
 
     #     # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
-                'message': message,
-                'username': username
+                "type": 'chat_message',
+                "msg": message,
+                'username': username,
+                'frndname': frndname
             }
         )
 
     # # Receive message from room group
     async def chat_message(self, event):
-        message = event['message']
+        message = event['msg']
         username = event['username']
-
+        frndname = event['frndname']
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message,
-            'username': username
+            'msg': message,
+            'username': username,
+            'frndname': frndname
         }))
+        # print(event)
+        # await self.send(event['msg'])
 
     @sync_to_async
-    def save_message(self, username, room, message):
+    def save_message(self, username, frndname, message):
         user = User.objects.get(username=username)
-        room = Room.objects.get(slug=room)
+        frndname = User.objects.get(username=frndname)
 
-        Message.objects.create(user=user, room=room, content=message)
+        Mychats.objects.create(me=user, frnd=frndname, content=message)
