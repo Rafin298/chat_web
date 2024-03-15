@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('chatapp.urls')),
     path('rooms/', include('room.urls')),
+    path('privatewindow/', include('privatewindow.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

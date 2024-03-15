@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     #local apps
     'chatapp',
     'room',
+    'privatewindow',
     #3rd party apps
     'channels',
 ]
@@ -88,23 +89,22 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'tiPjpeDkSybZgrCfcsJRPnbzhOgkGswA',
-        'HOST': 'monorail.proxy.rlwy.net',
-        'PORT': '37673',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'tiPjpeDkSybZgrCfcsJRPnbzhOgkGswA',
+#         'HOST': 'monorail.proxy.rlwy.net',
+#         'PORT': '37673',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
