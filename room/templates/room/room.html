@@ -16,7 +16,7 @@
     <form method="post" action="." class="flex">
         {% csrf_token %}
         <input type="text" name="content" class="flex-1 mr-3" placeholder="Your message..." id="chat-message-input">
-
+        <input type="file" class="flex-1 mr-3" placeholder="Your file..." id="file-input">
         <button 
             class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700"
             id="chat-message-submit"
@@ -47,19 +47,37 @@
     }
         {% comment %} {% endcomment %}
     chatSocket.onmessage = function(e) {
+        console.log('fhghg')
         const data = JSON.parse(e.data);
-
+        
         if (data.message) {
             document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
-        } else {
+        } else { 
             alert('The message was empty!')
         }
+        if (data.file_data) {
+            console.log("find errors")
+            try{
+                console.log("find errors")
+                const fileLink = document.createElement('a');
+                fileLink.href = 'data:application/octet-stream;base64,' + data.file_data;
+                fileLink.download = 'file.pdf';
+                fileLink.textContent = data.username +' '+ ' Download File';
 
-        scrollToBottom(); 
-        console.log('onmessage')
+                document.getElementById('chat-messages').appendChild(fileLink); 
+               /* document.querySelector('#chat-messages').innerHTML += ('<b>' + 'kk' + '</b>: '); 
+                document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');*/
+                console.log("find errors 2")
+            }catch (error) {
+                console.error('Error creating download link:', error);
+            }
+            
+        }
+       
+       /* console.log('onmessage')  */
     };
 
-    document.querySelector('#chat-message-input').focus();
+    {% comment %} document.querySelector('#chat-message-input').focus(); {% endcomment %}
     document.querySelector('#chat-message-input').onkeyup = function(e) {
         if (e.keyCode === 13) {
             document.querySelector('#chat-message-submit').click();
@@ -72,7 +90,34 @@
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
 
-        console.log({
+        if (message !== '') {
+            const fileInputDom = document.getElementById('file-input');
+            const file = fileInputDom.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const fileData = event.target.result.split(',')[1];
+                chatSocket.send(JSON.stringify({
+                    'username': userName,
+                    'room': roomName,
+                    'message': message,
+                    'file_data': fileData
+                }));
+                messageInputDom.value = '';
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                chatSocket.send(JSON.stringify({
+                    'username': userName,
+                    'room': roomName,
+                    'message': message,
+                    'file_data': null
+                }));
+                messageInputDom.value = '';
+            }
+        }
+
+     /**   console.log({
             'message': message,
             'username': userName,
             'room': roomName
@@ -84,7 +129,7 @@
             'room': roomName
         }));
 
-        messageInputDom.value = '';
+        messageInputDom.value = '';     */
 
         return false
     };
@@ -92,13 +137,12 @@
     /**
     * A function for finding the messages element, and scroll to the bottom of it.
     */
-    function scrollToBottom() {
+    {% comment %} function scrollToBottom() {
         let objDiv = document.getElementById("chat-messages");
         objDiv.scrollTop = objDiv.scrollHeight;
     }
 
-    // Add this below the function to trigger the scroll on load.
-    scrollToBottom();
+    scrollToBottom(); {% endcomment %}
 
 </script>
 {% endblock %}  
