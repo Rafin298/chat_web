@@ -6,7 +6,10 @@
     source env/Scripts/activate
     ```
 2. Install the requirements
-    $ pip install -r requirements.txt
+    ```
+    pip install -r requirements.txt
+    ```
+    
 3. migrate
     ```
     python manage.py makemigrations
