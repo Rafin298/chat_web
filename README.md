@@ -16,10 +16,10 @@
     python manage.py makemigrations
     python manage.py migrate
     ```
-4. Signup and Login
-    -Sample signup:
-    -name: Rafin
-    -Password:a1234b567
+4. Signup and Login  
+    Sample signup:  
+    name : Rafin  
+    Password : a1234b567  
 
 ## Learn More
 ChatWEB is a Django application designed for group discussions in real-time. It leverages Django Channels to provide a seamless chatting experience within designated chat zones.
