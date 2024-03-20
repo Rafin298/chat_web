@@ -1,4 +1,6 @@
 {% extends 'chatapp/base.html' %}
+{% load custom_filters %}
+
 
 {% block title %}{{ room.name }} | {% endblock %}
 
@@ -8,7 +10,20 @@
 </div>
 <div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
     <div class="chat-messages space-y-3" id="chat-messages">
-        {% for m in messages %}<b>{{ m.user.username }}</b>: {{ m.content }}<br>{% endfor %}
+        {% for m in messages %}
+        {% if m.content %}<b>{{ m.user.username }}</b>: {{ m.content }}<br>{% endif %}
+        {% if m.file_name %} 
+        {% if m.file_name|image_extension %}
+        {% comment %} <img src="{% static filename %}" alt="Image"> {% endcomment %}
+        {% comment %} <p>got a image</p> {% endcomment %}
+        <b>{{ m.user.username }}</b>:
+        <img src="data:image/png;base64,{{m.file_data}}" alt="Base64 Image" width="150" height="190">
+        {% else %}
+        <b>{{ m.user.username }}</b> : 
+        <a href='data:application/octet-stream;base64,{{m.file_data}}' download='{{ m.file_name }}' class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2.5 py-.8 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ m.file_name }}</a><br>{% endif %}
+        {% endif %}
+        
+        {% endfor %}
     </div>
 </div>
 
@@ -52,25 +67,40 @@
         
         if (data.message) {
             document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
-        } else { 
-            alert('The message was empty!')
         }
         if (data.file_data) {
-            console.log("find errors")
-            try{
-                console.log("find errors")
+            if(data.file_name.endsWith('jpg') || data.file_name.endsWith('jpeg') || data.file_name.endsWith('png') || data.file_name.endsWith('gif') || data.file_name.endsWith('bmp')){
+                console.log("image file")
+                const fileLink = document.createElement('img');
+                fileLink.src = 'data:image/png;base64,' + data.file_data;
+                fileLink.width = '150';
+                fileLink.height ='190';
+                
+                const br = document.createElement('br');
+                const names= document.createElement('b');
+                names.textContent = data.username+' : '
+                document.getElementById('chat-messages').appendChild(names); 
+                document.getElementById('chat-messages').appendChild(fileLink); 
+                document.getElementById('chat-messages').appendChild(br); 
+               /* document.querySelector('#chat-messages').innerHTML += ('<b>' + 'kk' + '</b>: ');
+                document.querySelector('#chat-messages').innerHTML += ('<b>'+data.username+'</b> : <a> href="data:application/octet-stream;base64,' + data.file_data + '</b>: ' + data.message + '<br>'); */
+            }else{
+                console.log("image file 2")
                 const fileLink = document.createElement('a');
                 fileLink.href = 'data:application/octet-stream;base64,' + data.file_data;
-                fileLink.download = 'file.pdf';
-                fileLink.textContent = data.username +' '+ ' Download File';
-
+                fileLink.download = data.file_name;
+                fileLink.textContent = data.file_name;
+                fileLink.className = 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2.5 py-.8 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                const br = document.createElement('br');
+                const names= document.createElement('b');
+                names.textContent = data.username+' : '
+                document.getElementById('chat-messages').appendChild(names); 
                 document.getElementById('chat-messages').appendChild(fileLink); 
-               /* document.querySelector('#chat-messages').innerHTML += ('<b>' + 'kk' + '</b>: '); 
-                document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');*/
-                console.log("find errors 2")
-            }catch (error) {
-                console.error('Error creating download link:', error);
+                document.getElementById('chat-messages').appendChild(br); 
+               /* document.querySelector('#chat-messages').innerHTML += ('<b>' + 'kk' + '</b>: ');
+                document.querySelector('#chat-messages').innerHTML += ('<b>'+data.username+'</b> : <a> href="data:application/octet-stream;base64,' + data.file_data + '</b>: ' + data.message + '<br>'); */
             }
+               
             
         }
        
@@ -89,48 +119,33 @@
 
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
-
-        if (message !== '') {
-            const fileInputDom = document.getElementById('file-input');
-            const file = fileInputDom.files[0];
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const fileData = event.target.result.split(',')[1];
-                chatSocket.send(JSON.stringify({
-                    'username': userName,
-                    'room': roomName,
-                    'message': message,
-                    'file_data': fileData
-                }));
-                messageInputDom.value = '';
-            };
-            if (file) {
-                reader.readAsDataURL(file);
-            } else {
-                chatSocket.send(JSON.stringify({
-                    'username': userName,
-                    'room': roomName,
-                    'message': message,
-                    'file_data': null
-                }));
-                messageInputDom.value = '';
-            }
+        const fileInputDom = document.getElementById('file-input');
+        const file = fileInputDom.files[0];
+        
+        if (message === '' && !file) {
+            return; // Don't send if both message and file are empty
         }
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const fileData = file ? event.target.result.split(',')[1] : null;
+            const file_name = file ? file.name: null;
+            chatSocket.send(JSON.stringify({
+                'username': userName,
+                'room': roomName,
+                'message': message,
+                'file_data': fileData,
+                'file_name': file_name
+            }));
+            messageInputDom.value = '';
+            fileInputDom.value = ''; // Clear file input after sending
+        };
 
-     /**   console.log({
-            'message': message,
-            'username': userName,
-            'room': roomName
-        })
-
-        chatSocket.send(JSON.stringify({
-            'message': message,
-            'username': userName,
-            'room': roomName
-        }));
-
-        messageInputDom.value = '';     */
-
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            reader.onload(); // Simulate onload event if no file is selected
+        }
+        
         return false
     };
 
@@ -143,6 +158,11 @@
     }
 
     scrollToBottom(); {% endcomment %}
-
+    document.querySelectorAll('.image-container img').forEach(image => {
+        image.onclick = () => {
+        document.querySelector('.popup-image').style.display ='block';
+        document.querySelector('.popup-image img').src = image.getAttribute("src");
+        }
+        });
 </script>
 {% endblock %}  
