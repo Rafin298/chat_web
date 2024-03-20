@@ -1,6 +1,6 @@
 ## Getting Started
 1. Activate the virtual environment
-    using git bash
+   (using git bash)
     ```
     python -m venv env
     source env/Scripts/activate
