@@ -4,7 +4,7 @@
     ```
     #using git bash
     git clone repository
-    cd CarelogixChat
+    cd chat_web
     python -m venv env
     source env/Scripts/activate
     ```
@@ -24,11 +24,11 @@
     ```
 5. Signup and Login  
     Sample signup :  
-    name : Rafin  
-    Password : a1234b567 
+    name :   
+    Password : 
 
-6. go to zones and create e new zone and start chatting  
+6. start chatting using group chat and private chat
 
 ## Learn More
 ChatWEB is a Django application designed for group discussions in real-time. It leverages Django Channels to provide a seamless chatting experience within designated chat zones.
-Video Demo of APP : https://drive.google.com/file/d/1Cd8x34rWHnNNEdScI0NWHqLgKAwCVOUx/view?usp=sharing
+Video Demo of APP : 
