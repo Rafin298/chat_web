@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+import logging
 from django.shortcuts import render, redirect
 from .forms import RoomForm
 from .models import Room, Message
-
+logger = logging.getLogger(__name__)
 @login_required
 def rooms(request):
     rooms = Room.objects.all()
@@ -23,6 +24,7 @@ def createRoom(request):
         if form.is_valid():
             form.save()
             # obj=form.instance
+            logger.info("room created")
             return redirect('rooms')
     else:
         form = RoomForm()

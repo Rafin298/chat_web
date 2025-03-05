@@ -1,10 +1,12 @@
 import json
-
+import logging
 from django.contrib.auth.models import User
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 
 from .models import Mychats
+
+logger = logging.getLogger(__name__)
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -16,6 +18,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         print("connecting........")
+        logger.info("connecting........")
         await self.accept()
 
     async def disconnect(self, code):
@@ -28,6 +31,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         print(data)
+        logger.info(data)
         message = data['msg']
         username = data['username']
         frndname = data['frndname']
