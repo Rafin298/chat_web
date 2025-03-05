@@ -24,5 +24,6 @@ urlpatterns = [
     path('', include('chatapp.urls')),
     path('rooms/', include('room.urls')),
     path('privatewindow/', include('privatewindow.urls')),
+    # path("__debug__/", include("debug_toolbar.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
