@@ -1,3 +1,81 @@
-/env
-/venv
+# Python-related files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django-specific files
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Virtual Environment
+venv/
+env/
 .env
+.venv
+ENV/
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Static and Collected Static Files
+staticfiles/
+static/dist/
+
+# Security and Sensitive Information
+.env
+*.env
+*.secret
+secrets.json
+
+# Dependency Directories
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Deployment and Packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Backup Files
+*.bak
+*.backup
+
+# Logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django migrations (optional - depends on your workflow)
+# Uncomment the next line if you don't want to track migrations
+# **/migrations/**
+# !**/migrations/__init__.py
