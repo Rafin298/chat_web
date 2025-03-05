@@ -33,8 +33,9 @@
     const frndname = JSON.parse(document.getElementById('json-frndname').textContent);
     {% comment %}  {% endcomment %}
     const userName = JSON.parse(document.getElementById('json-username').textContent);
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const chatSocket = new WebSocket(
-        'wss://'
+        protocol
         + window.location.host
         +'/ws/wsc/wsc/'
     );
