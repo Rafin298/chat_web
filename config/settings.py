@@ -75,9 +75,9 @@ LOGGING = {
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', "False") == "True"
 
-ALLOWED_HOSTS = ['.vercel.app','.now.sh','127.0.0.1','localhost', 'chat-web-agjq.onrender.com']
+ALLOWED_HOSTS = ['.vercel.app','.now.sh','127.0.0.1','localhost', 'chat-web-agjq.onrender.com', '*']
 CSRF_TRUSTED_ORIGINS = [
-    "https://chat-web-agjq.onrender.com",
+    "https://chat-web-agjq.onrender.com","http://3.106.59.205"
 ]
 
 LOGOUT_REDIRECT_URL = '/'
