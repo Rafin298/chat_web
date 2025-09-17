@@ -12,20 +12,24 @@
     ```
     pip install -r requirements.txt
     ```
+
+3. Add .env file in confi for database connection and secret key in django setting or fill them manually
+
     
-3. migrate
+4. migrate
     ```
     python manage.py makemigrations
     python manage.py migrate
     ```
-4. runserver
+5. runserver
     ```
     python manage.py runserver
     ```
 5. Signup and Login  
-    Sample signup :  
-    name :   
-    Password : 
+    Sample signup -->
+    name :   rafu
+    Password : rafu#1234
+
 
 6. start chatting using group chat and private chat
 
